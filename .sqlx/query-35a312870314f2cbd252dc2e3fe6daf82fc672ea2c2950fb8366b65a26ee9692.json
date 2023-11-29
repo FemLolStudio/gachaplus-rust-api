@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE `oc` SET `mycode`= ? WHERE `accountx`= ? AND `secretid` = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "35a312870314f2cbd252dc2e3fe6daf82fc672ea2c2950fb8366b65a26ee9692"
+}

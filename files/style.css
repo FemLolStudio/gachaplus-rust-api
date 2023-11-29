@@ -1,0 +1,44 @@
+@font-face {
+    font-family: "Comic Sans MS";
+    src: url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.eot");
+    src: url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.eot?#iefix")format("embedded-opentype"),
+    url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.woff2")format("woff2"),
+    url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.woff")format("woff"),
+    url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.ttf")format("truetype"),
+    url("https://db.onlinewebfonts.com/t/7cc6719bd5f0310be3150ba33418e72e.svg#Comic Sans MS")format("svg");
+}
+body{
+    background-color: #111;
+    font-family: "Comic Sans MS";
+    color: white;
+}
+main{
+    margin: auto;
+    width: fit-content;
+}
+h1, h2, h3{
+    text-align: center;
+}
+h1, h2{
+    color: yellow;
+}
+h3{
+    color: gray;
+}
+table{
+    margin: auto;
+    border-collapse: collapse;
+    border: solid 2px cornflowerblue;
+}
+td, th{
+    padding:10px;
+    text-align: center;
+    border: dotted 1px cornflowerblue;
+}
+th{
+    border-bottom: solid 1px cornflowerblue;
+    color: yellow;
+}
+b{
+    color: cadetblue;
+}

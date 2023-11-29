@@ -1,0 +1,69 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT * FROM `latestversion` ORDER BY `id` DESC LIMIT 1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | AUTO_INCREMENT",
+          "char_set": 63,
+          "max_size": 10
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "version",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 2048
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "checksum",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 2048
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "url",
+        "type_info": {
+          "type": "VarString",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 2048
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "regdate",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | UNSIGNED | BINARY | TIMESTAMP",
+          "char_set": 63,
+          "max_size": 19
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a13b54cb337df43987f542321f52d614c9c9306b10ea06cf5f1623d2c86656d6"
+}

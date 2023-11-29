@@ -1,0 +1,148 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+CREATE DATABASE IF NOT EXISTS `gacha-plus` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `gacha-plus`;
+
+CREATE TABLE `freeoc` (
+  `accountx` char(7) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `owner` bigint(20) UNSIGNED NOT NULL,
+  `secretid` char(9) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `mycode` text NOT NULL,
+  `createdate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+
+CREATE TABLE `latestversion` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `version` varchar(512) NOT NULL,
+  `checksum` varchar(512) NOT NULL,
+  `url` varchar(512) NOT NULL,
+  `regdate` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+
+CREATE TABLE `oc` (
+  `accountx` char(7) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `secretid` char(9) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+  `mycode` text COMPRESSED NOT NULL DEFAULT '',
+  `used` smallint(5) UNSIGNED NOT NULL DEFAULT 0,
+  `createdate` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updatedate` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED
+PARTITION BY KEY (`accountx`)
+(
+PARTITION p0 ENGINE=InnoDB,
+PARTITION p1 ENGINE=InnoDB,
+PARTITION p2 ENGINE=InnoDB,
+PARTITION p3 ENGINE=InnoDB,
+PARTITION p4 ENGINE=InnoDB,
+PARTITION p5 ENGINE=InnoDB,
+PARTITION p6 ENGINE=InnoDB,
+PARTITION p7 ENGINE=InnoDB,
+PARTITION p8 ENGINE=InnoDB,
+PARTITION p9 ENGINE=InnoDB
+);
+
+CREATE TABLE `shortlog` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `address` int(10) UNSIGNED NOT NULL,
+  `action` tinyint(3) UNSIGNED NOT NULL,
+  `regdate` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT
+PARTITION BY RANGE (unix_timestamp(`regdate`))
+(
+PARTITION p2303 VALUES LESS THAN (1680307200) ENGINE=InnoDB,
+PARTITION p2304 VALUES LESS THAN (1682899200) ENGINE=InnoDB,
+PARTITION p2305 VALUES LESS THAN (1685577600) ENGINE=InnoDB,
+PARTITION p2306 VALUES LESS THAN (1688169600) ENGINE=InnoDB,
+PARTITION p2307 VALUES LESS THAN (1690848000) ENGINE=InnoDB,
+PARTITION p2308 VALUES LESS THAN (1693526400) ENGINE=InnoDB,
+PARTITION p2309 VALUES LESS THAN (1696118400) ENGINE=InnoDB,
+PARTITION p2310 VALUES LESS THAN (1698796800) ENGINE=InnoDB,
+PARTITION p2311 VALUES LESS THAN (1701388800) ENGINE=InnoDB,
+PARTITION p2312 VALUES LESS THAN (1704067200) ENGINE=InnoDB,
+PARTITION p2401 VALUES LESS THAN (1706745600) ENGINE=InnoDB,
+PARTITION p2402 VALUES LESS THAN (1709251200) ENGINE=InnoDB,
+PARTITION p2403 VALUES LESS THAN (1711929600) ENGINE=InnoDB,
+PARTITION p2404 VALUES LESS THAN (1714521600) ENGINE=InnoDB,
+PARTITION p2405 VALUES LESS THAN (1717200000) ENGINE=InnoDB,
+PARTITION pmax VALUES LESS THAN MAXVALUE ENGINE=InnoDB
+);
+
+CREATE TABLE `shortlog_actions` (
+  `id` tinyint(3) UNSIGNED NOT NULL,
+  `name` tinytext NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+
+INSERT INTO `shortlog_actions` (`id`, `name`) VALUES
+(1, 'OCexport'),
+(2, 'OCimport'),
+(3, 'OCrandom'),
+(4, 'WINAPPgetversion'),
+(5, 'ALLexport'),
+(6, 'ALLimport'),
+(7, 'startups');
+
+CREATE TABLE `startup_log` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `platform` varchar(7) CHARACTER SET armscii8 COLLATE armscii8_general_ci NOT NULL,
+  `version` varchar(7) CHARACTER SET armscii8 COLLATE armscii8_general_ci NOT NULL,
+  `xbits` tinyint(3) UNSIGNED NOT NULL,
+  `regdate` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPACT;
+
+CREATE TABLE `transfer` (
+  `accountx` int(10) UNSIGNED NOT NULL,
+  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`data`)),
+  `used` smallint(10) UNSIGNED NOT NULL DEFAULT 0,
+  `regdate` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
+
+
+ALTER TABLE `freeoc`
+  ADD PRIMARY KEY (`accountx`),
+  ADD KEY `owner` (`owner`);
+
+ALTER TABLE `latestversion`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `oc`
+  ADD PRIMARY KEY (`accountx`);
+
+ALTER TABLE `shortlog`
+  ADD PRIMARY KEY (`id`,`regdate`),
+  ADD KEY `action` (`action`);
+
+ALTER TABLE `shortlog_actions`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `startup_log`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `transfer`
+  ADD PRIMARY KEY (`accountx`);
+
+
+ALTER TABLE `latestversion`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `shortlog`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `startup_log`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `freeoc`
+  ADD CONSTRAINT `freeoc_ibfk_1` FOREIGN KEY (`owner`) REFERENCES `freeoc_user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

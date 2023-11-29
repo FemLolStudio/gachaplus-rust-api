@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO `oc`(`accountx`, `secretid`, `mycode`) VALUES (?, ?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "f85ce6a36880c7de45e8785e754e78361fc4707896d9dabf6d19198ab2191d56"
+}

@@ -1,0 +1,80 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT * FROM `oc` WHERE `accountx` = ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "accountx",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | PRIMARY_KEY | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 28
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "secretid",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 36
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "mycode",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB",
+          "char_set": 224,
+          "max_size": 262140
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "used",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | UNSIGNED",
+          "char_set": 63,
+          "max_size": 5
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "createdate",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | UNSIGNED | BINARY | TIMESTAMP",
+          "char_set": 63,
+          "max_size": 19
+        }
+      },
+      {
+        "ordinal": 5,
+        "name": "updatedate",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | UNSIGNED | BINARY | TIMESTAMP | ON_UPDATE_NOW",
+          "char_set": 63,
+          "max_size": 19
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "a47cc6bae06558ea750fb07d1a0efb323f3b45e82524507affb0e403b3ce7d4f"
+}

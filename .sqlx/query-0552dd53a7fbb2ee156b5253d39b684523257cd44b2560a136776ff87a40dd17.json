@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO `shortlog`(`address`, `action`, `regdate`) VALUES (?,?,?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "0552dd53a7fbb2ee156b5253d39b684523257cd44b2560a136776ff87a40dd17"
+}

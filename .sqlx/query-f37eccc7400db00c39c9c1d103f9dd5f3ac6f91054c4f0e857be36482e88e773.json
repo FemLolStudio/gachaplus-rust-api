@@ -1,0 +1,25 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT `secretid` FROM `oc` WHERE `accountx`=?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "secretid",
+        "type_info": {
+          "type": "String",
+          "flags": "NOT_NULL | NO_DEFAULT_VALUE",
+          "char_set": 224,
+          "max_size": 36
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "f37eccc7400db00c39c9c1d103f9dd5f3ac6f91054c4f0e857be36482e88e773"
+}

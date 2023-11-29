@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO `transfer`(`accountx`, `data`) VALUES (?,?) ON DUPLICATE KEY UPDATE `data`=?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "e37cc3423ef9a0146a050d6e8b3a10161f1353bcb58fd5fd2b84dbba8562a7a9"
+}

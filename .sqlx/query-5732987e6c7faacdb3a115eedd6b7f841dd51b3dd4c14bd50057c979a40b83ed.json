@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "UPDATE `transfer` SET `used`=`used`+1 WHERE `accountx`= ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "5732987e6c7faacdb3a115eedd6b7f841dd51b3dd4c14bd50057c979a40b83ed"
+}

@@ -1,0 +1,58 @@
+{
+  "db_name": "MySQL",
+  "query": "SELECT * FROM `transfer` WHERE `accountx`= ?",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "accountx",
+        "type_info": {
+          "type": "Long",
+          "flags": "NOT_NULL | PRIMARY_KEY | UNSIGNED | NO_DEFAULT_VALUE",
+          "char_set": 63,
+          "max_size": 10
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "data",
+        "type_info": {
+          "type": "Blob",
+          "flags": "NOT_NULL | BLOB | BINARY",
+          "char_set": 224,
+          "max_size": 4294967295
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "used",
+        "type_info": {
+          "type": "Short",
+          "flags": "NOT_NULL | UNSIGNED",
+          "char_set": 63,
+          "max_size": 10
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "regdate",
+        "type_info": {
+          "type": "Timestamp",
+          "flags": "NOT_NULL | UNSIGNED | BINARY | TIMESTAMP",
+          "char_set": 63,
+          "max_size": 19
+        }
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e64ecde83932fdf64938154a8bcd121f1dbc383ae80bbcf94baf0136254c53e4"
+}

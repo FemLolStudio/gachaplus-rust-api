@@ -1,0 +1,12 @@
+{
+  "db_name": "MySQL",
+  "query": "INSERT INTO `startup_log`(`platform`, `version`, `xbits`) VALUES (?,?,?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "4a2dcaa8acd28c407ae3ed8f30471bd20fcc2795cd70b6eeb09584f8fe3a059b"
+}
