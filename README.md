@@ -1,3 +1,5 @@
+![Logo](banner.png)
+
 # Gacha Plus Rust API
 
 A Rust version from the original PHP API with 100% backward compatibility.
