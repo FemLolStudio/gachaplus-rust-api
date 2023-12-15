@@ -5,13 +5,13 @@ use std::{
     time::{Duration, Instant},
 };
 
+use axum::http::HeaderMap;
 use axum::{
     extract::{ConnectInfo, Request, State},
     http::StatusCode,
     middleware::Next,
     response::{IntoResponse, Response},
 };
-use hyper::HeaderMap;
 use tokio::sync::Mutex;
 
 use crate::http_handler::{ip_manager, AppState};

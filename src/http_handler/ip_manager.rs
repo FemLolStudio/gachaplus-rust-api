@@ -3,7 +3,7 @@ use std::{
     str::FromStr,
 };
 
-use hyper::HeaderMap;
+use axum::http::HeaderMap;
 use md5::{Digest, Md5};
 
 pub fn get_user_ip(addr: SocketAddr, headers: HeaderMap) -> String {

@@ -1,12 +1,12 @@
 use std::{net::SocketAddr, sync::Arc};
 
+use axum::http::HeaderMap;
 use axum::{
     extract::{ConnectInfo, OriginalUri, Request, State},
     http::StatusCode,
     middleware::Next,
     response::Response,
 };
-use hyper::HeaderMap;
 
 use crate::{
     gachaplus_database::short_log_table::{ActionEnum, ShortLog},

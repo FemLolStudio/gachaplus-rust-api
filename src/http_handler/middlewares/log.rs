@@ -1,5 +1,6 @@
 use std::{net::SocketAddr, time::Instant};
 
+use axum::http::HeaderMap;
 use axum::{
     body::{Body, Bytes},
     extract::{ConnectInfo, OriginalUri, Request},
@@ -9,7 +10,6 @@ use axum::{
 };
 use chrono::Utc;
 use http_body_util::BodyExt;
-use hyper::HeaderMap;
 use inline_colorization::*;
 
 use crate::http_handler::ip_manager::get_user_ip;
