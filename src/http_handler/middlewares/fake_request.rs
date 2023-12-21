@@ -1,12 +1,10 @@
 #[cfg(not(debug_assertions))]
 use axum::{
     extract::OriginalUri,
-    http::{StatusCode, Uri},
+    http::{HeaderMap, StatusCode, Uri},
     response::IntoResponse,
 };
 use axum::{extract::Request, middleware::Next, response::Response};
-#[cfg(not(debug_assertions))]
-use hyper::HeaderMap;
 
 pub async fn fake_request_middleware(
     #[cfg(not(debug_assertions))] headers: HeaderMap,
