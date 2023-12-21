@@ -12,10 +12,7 @@ use build_html::*;
 use chrono::Utc;
 use memory_stats::memory_stats;
 use serde::Deserialize;
-use sysinfo::{
-    Component, ComponentExt, DiskExt, NetworkData, NetworkExt, Pid, Process, ProcessExt, System,
-    SystemExt,
-};
+use sysinfo::{Component, Components, Disks, NetworkData, Networks, Pid, Process, System};
 use thousands::Separable;
 use tokio::sync::Mutex;
 
@@ -140,21 +137,22 @@ pub async fn get_info(
 
     systeminfo_table.push([
         "System name".to_owned(),
-        sys.name().unwrap_or(escape_html("<unknown>")),
+        System::name().unwrap_or(escape_html("<unknown>")),
     ]);
     systeminfo_table.push([
         "System kernel version".to_owned(),
-        sys.kernel_version().unwrap_or(escape_html("<unknown>")),
+        System::kernel_version().unwrap_or(escape_html("<unknown>")),
     ]);
     systeminfo_table.push([
         "System host name".to_owned(),
-        sys.host_name().unwrap_or(escape_html("<unknown>")),
+        System::host_name().unwrap_or(escape_html("<unknown>")),
     ]);
     systeminfo_table.push(["Number of CPUs".to_owned(), format!("{}", sys.cpus().len())]);
 
     //---------------------------------------------------------
 
-    let mut components: Vec<&Component> = sys.components().iter().collect();
+    let components = Components::new_with_refreshed_list();
+    let mut components: Vec<&Component> = components.iter().collect();
     components.sort_by(|a, b| a.label().cmp(b.label()));
     for component in components {
         //println!("{:?}", component);
@@ -167,7 +165,8 @@ pub async fn get_info(
     //---------------------------------------------------------
 
     // Network interfaces name, data received and data transmitted:
-    let mut networks: Vec<(&String, &NetworkData)> = sys.networks().into_iter().collect();
+    let networks = Networks::new_with_refreshed_list();
+    let mut networks: Vec<(&String, &NetworkData)> = networks.into_iter().collect();
     networks.sort_by(|a, b| b.1.total_transmitted().cmp(&a.1.total_transmitted()));
 
     for (interface_name, data) in networks {
@@ -184,12 +183,13 @@ pub async fn get_info(
     //---------------------------------------------------------
 
     // We display all disks' information:
-    for disk in sys.disks() {
+    for disk in Disks::new_with_refreshed_list().iter() {
         //println!("{:?}", disk);
         disk_table.push([
             disk.name().to_string_lossy().to_string(),
             disk.mount_point().to_string_lossy().to_string(),
-            String::from_utf8(disk.file_system().to_vec()).unwrap_or(escape_html("<unknown>")),
+            String::from_utf8(disk.file_system().as_encoded_bytes().to_vec())
+                .unwrap_or(escape_html("<unknown>")),
             format!(
                 "{}/{} GB <i>({} GB available)</i>",
                 ((disk.total_space() - disk.available_space()) / GB).separate_with_spaces(),
