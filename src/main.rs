@@ -7,10 +7,7 @@ static GLOBAL: Jemalloc = Jemalloc;
 
 use chrono::Utc;
 use inline_colorization::*;
-use std::{
-    net::{IpAddr, Ipv6Addr, SocketAddr},
-    str::FromStr,
-};
+use std::net::{IpAddr, Ipv6Addr, SocketAddr};
 
 mod background_jobs;
 mod character_code;
