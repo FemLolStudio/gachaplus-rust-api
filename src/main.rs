@@ -7,7 +7,7 @@ static GLOBAL: Jemalloc = Jemalloc;
 
 use chrono::Utc;
 use inline_colorization::*;
-use std::net::SocketAddr;
+use std::{net::SocketAddr, str::FromStr};
 
 mod background_jobs;
 mod character_code;
@@ -36,7 +36,7 @@ pub async fn run_server() {
     background_jobs::start(app_state);
 
     //opening port
-    let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
+    let addr = SocketAddr::from_str("[::]:8080").unwrap();
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 
     println!("{color_cyan}{}{color_green}\tWebserver: 💚 Listening on '{color_cyan}{addr}{color_green}' 💚{color_white}",
