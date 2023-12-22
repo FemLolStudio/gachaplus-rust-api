@@ -39,7 +39,7 @@ pub async fn run_server() {
     let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 
-    println!("{color_cyan}{}{color_green}\tWebszerver: 💚 Listening on '{color_cyan}{addr}{color_green}' 💚{color_white}",
+    println!("{color_cyan}{}{color_green}\tWebserver: 💚 Listening on '{color_cyan}{addr}{color_green}' 💚{color_white}",
         Utc::now().format("[%H:%M:%S]"),
     );
 

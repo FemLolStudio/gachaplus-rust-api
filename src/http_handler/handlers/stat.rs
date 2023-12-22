@@ -306,9 +306,9 @@ pub async fn get_info(
         html_page.add_script_literal(
             r#"
         setTimeout(function() {
-            // Az oldal újratöltése
+            // refresh page
             location.reload();
-        }, 5000); // 3000 milliszekundum = 3 másodperc
+        }, 5000); // 5000 millisec = 5 sec
         "#,
         );
     }
