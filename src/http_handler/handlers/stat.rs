@@ -47,11 +47,27 @@ pub async fn get_info(
     let mut tempreture_table: Vec<[String; 2]> = Vec::new();
     let mut network_table: Vec<[String; 2]> = Vec::new();
     let mut disk_table: Vec<[String; 4]> = Vec::new();
-    let mut processes_table: Vec<[String; 3]> = Vec::new();
+    let mut processes_table: Vec<[String; 4]> = Vec::new();
 
     //---------------------------------------------------------
 
     {
+        let diff = Utc::now() - app_state.startup_time;
+        let diff_minutes = diff.num_minutes() % 60;
+        let diff_hours = diff.num_hours() % 24;
+        let diff_days = diff.num_days();
+
+        app_table.push([
+            "Started".to_owned(),
+            app_state
+                .startup_time
+                .format("%Y.%m.%d. %H:%M:%S (UTC)")
+                .to_string(),
+        ]);
+        app_table.push([
+            "Uptime".to_owned(),
+            format!("{diff_days} days, {diff_hours} hours, {diff_minutes} minutes"),
+        ]);
         app_table.push([
             "Free OCs".to_owned(),
             format!(
@@ -209,6 +225,10 @@ pub async fn get_info(
             format!("[{}]", pid),
             process.name().to_owned(),
             format!("{} MB", (process.memory() / MB).separate_with_spaces()),
+            format!(
+                "{} MB",
+                (process.virtual_memory() / MB).separate_with_spaces()
+            ),
         ]);
     }
 
@@ -274,7 +294,8 @@ pub async fn get_info(
                 .with_table(Table::from(processes_table).with_header_row([
                     "PID",
                     "Process name",
-                    "Memory used (RAM)",
+                    "Phisical memory used",
+                    "Virtual memory used",
                 ])),
         );
 

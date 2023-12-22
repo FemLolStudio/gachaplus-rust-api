@@ -4,6 +4,7 @@ use std::time::{Duration, Instant};
 
 use axum::response::Redirect;
 use axum::{middleware, routing, Router};
+use chrono::{DateTime, Utc};
 use tokio::sync::{Mutex, RwLock};
 use tower_http::services::ServeDir;
 
@@ -26,6 +27,7 @@ pub struct AppState {
     pub oc_chache: RwLock<Vec<FreeOc>>,
     pub log_queue: Mutex<Vec<ShortLog>>,
     pub rate_limit: HashMap<&'static str, (Mutex<HashMap<String, Instant>>, Duration)>,
+    pub startup_time: DateTime<Utc>,
 }
 impl AppState {
     pub async fn new(database_url: String) -> Arc<Self> {
@@ -33,11 +35,13 @@ impl AppState {
         let oc_chache = RwLock::new(Vec::new());
         let log_queue = Mutex::new(Vec::new());
         let rate_limit = create_ratelimit();
+        let startup_time = Utc::now();
         let app_state = AppState {
             database,
             oc_chache,
             log_queue,
             rate_limit,
+            startup_time,
         };
         Arc::new(app_state)
     }
