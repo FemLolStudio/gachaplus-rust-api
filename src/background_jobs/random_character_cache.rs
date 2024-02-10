@@ -10,6 +10,7 @@ use tokio::time::sleep;
 use crate::http_handler::AppState;
 
 pub async fn random_character_cache_service(app_state: Arc<AppState>) {
+    let mut lastlen = 0;
     loop {
         let ocs_res = app_state.database.oc_random_table.get_ocs().await;
         if let Ok(ocs) = ocs_res {
@@ -20,14 +21,18 @@ pub async fn random_character_cache_service(app_state: Arc<AppState>) {
                 *writer = ocs;
             }
             let delay_in_ms = now.elapsed().as_micros() as f64 / 1000f64;
-            println!(
-                "{}{}\tRandom character: {} character in the random character cache 🙆\tDelay: {:.3} ms{}",
-                color_bright_black,
-                Utc::now().format("[%H:%M:%S]"),
-                ocs_len,
-                delay_in_ms,
-                color_white
-            );
+
+            if lastlen != ocs_len {
+                println!(
+                    "{}{}\tRandom character: {} character in the random character cache 🙆\tDelay: {:.3} ms{}",
+                    color_bright_black,
+                    Utc::now().format("[%H:%M:%S]"),
+                    ocs_len,
+                    delay_in_ms,
+                    color_white
+                );
+                lastlen = ocs_len;
+            }
         }
         sleep(Duration::from_secs(60)).await;
     }

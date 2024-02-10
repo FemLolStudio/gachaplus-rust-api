@@ -34,15 +34,17 @@ pub async fn write_out_log_service(app_state: Arc<AppState>) {
             }
         }
 
-        println!(
-            "{}{}\tLogging: {} log row added!\tAVG delay: {:.3} ms\tAll delay: {:.3} ms{}",
-            color_bright_black,
-            Utc::now().format("[%H:%M:%S]"),
-            current_logs.len(),
-            median(&mut delays_in_ms).unwrap_or_default(),
-            delays_in_ms.iter().sum::<f64>(),
-            color_white,
-        );
+        if current_logs.len() > 0 {
+            println!(
+                "{}{}\tLogging: {} log row added!\tAVG delay: {:.3} ms\tAll delay: {:.3} ms{}",
+                color_bright_black,
+                Utc::now().format("[%H:%M:%S]"),
+                current_logs.len(),
+                median(&mut delays_in_ms).unwrap_or_default(),
+                delays_in_ms.iter().sum::<f64>(),
+                color_white,
+            );
+        }
 
         sleep(Duration::from_secs(15)).await;
     }

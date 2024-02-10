@@ -23,14 +23,16 @@ pub async fn cleanup_ratelimit_cache(app_state: Arc<AppState>) {
         }
         let delay_in_ms = now.elapsed().as_micros() as f64 / 1000f64;
 
-        println!(
-            "{}{}\tRateLimitCleaner: {} ip removed!\tDelay: {:.3} ms{}",
-            color_bright_black,
-            Utc::now().format("[%H:%M:%S]"),
-            count_before - count_after,
-            delay_in_ms,
-            color_white,
-        );
+        if count_before - count_after > 0 {
+            println!(
+                "{}{}\tRateLimitCleaner: {} ip removed!\tDelay: {:.3} ms{}",
+                color_bright_black,
+                Utc::now().format("[%H:%M:%S]"),
+                count_before - count_after,
+                delay_in_ms,
+                color_white,
+            );
+        }
 
         sleep(Duration::from_secs(60)).await;
     }
