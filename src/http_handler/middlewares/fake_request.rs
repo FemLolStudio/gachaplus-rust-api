@@ -72,7 +72,7 @@ fn is_fake(headers: &HeaderMap, path: &Uri) -> Option<&'static str> {
         //Host
         let host_option = headers.get("Host");
         if let Some(host) = host_option.and_then(|ua| ua.to_str().ok()) {
-            if host != "gacha-plus.com" {
+            if host != "gacha-plus.com" || host != "gachaplus.femlol.hu" {
                 return Some("'Host' - 'gacha-plus.com'");
             }
         } else {
