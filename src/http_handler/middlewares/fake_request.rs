@@ -1,12 +1,22 @@
+use std::sync::Arc;
+
 #[cfg(not(debug_assertions))]
 use axum::{
     extract::OriginalUri,
     http::{HeaderMap, StatusCode, Uri},
     response::IntoResponse,
 };
-use axum::{extract::Request, middleware::Next, response::Response};
+use axum::{
+    extract::{Request, State},
+    middleware::Next,
+    response::Response,
+};
+
+use crate::http_handler::AppState;
 
 pub async fn fake_request_middleware(
+    #[allow(unused_variables)] State(app_state): State<Arc<AppState>>,
+
     #[cfg(not(debug_assertions))] headers: HeaderMap,
     #[cfg(not(debug_assertions))] OriginalUri(path): OriginalUri,
 
@@ -14,9 +24,13 @@ pub async fn fake_request_middleware(
     next: Next,
 ) -> Response {
     #[cfg(not(debug_assertions))]
-    if let Some(error) = is_fake(&headers, &path) {
-        //println!("{:?}", headers);
-        (StatusCode::BAD_REQUEST, format!("FAKE REQUEST: {error}")).into_response()
+    if app_state.request_protection {
+        if let Some(error) = is_fake(&headers, &path) {
+            //println!("{:?}", headers);
+            (StatusCode::BAD_REQUEST, format!("FAKE REQUEST: {error}")).into_response()
+        } else {
+            next.run(request).await
+        }
     } else {
         next.run(request).await
     }

@@ -8,6 +8,7 @@ use chrono::{DateTime, Utc};
 use tokio::sync::{Mutex, RwLock};
 use tower_http::services::ServeDir;
 
+use crate::enviorment;
 use crate::gachaplus_database::short_log_table::ShortLog;
 
 use self::middlewares::ratelimit::create_ratelimit;
@@ -28,6 +29,7 @@ pub struct AppState {
     pub log_queue: Mutex<Vec<ShortLog>>,
     pub rate_limit: HashMap<&'static str, (Mutex<HashMap<String, Instant>>, Duration)>,
     pub startup_time: DateTime<Utc>,
+    pub request_protection: bool,
 }
 impl AppState {
     pub async fn new(database_url: String) -> Arc<Self> {
@@ -36,12 +38,14 @@ impl AppState {
         let log_queue = Mutex::new(Vec::new());
         let rate_limit = create_ratelimit();
         let startup_time = Utc::now();
+        let request_protection = enviorment::get_enviorment("PROTECTION").contains('1');
         let app_state = AppState {
             database,
             oc_chache,
             log_queue,
             rate_limit,
             startup_time,
+            request_protection,
         };
         Arc::new(app_state)
     }
@@ -95,7 +99,10 @@ pub async fn create_router(app_state: Arc<AppState>) -> Router {
             app_state.clone(),
             ratelimit::rate_limit_middleware,
         ))
-        .layer(middleware::from_fn(fake_request::fake_request_middleware))
+        .layer(middleware::from_fn_with_state(
+            app_state.clone(),
+            fake_request::fake_request_middleware,
+        ))
         .layer(middleware::from_fn(log::log))
         .layer(middleware::from_fn(answer_200::answer_200))
 }
