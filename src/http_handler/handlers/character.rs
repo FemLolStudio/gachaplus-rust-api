@@ -71,7 +71,11 @@ pub async fn add_oc(
     }
     let character_result = CharacterCode::new_from_code(&param.mycode);
     if let Err(err) = character_result {
-        return (StatusCode::BAD_REQUEST, format!("Invalid `mycode`: {err}")).into_response();
+        return (
+            StatusCode::BAD_REQUEST,
+            format!("Invalid `mycode`: {err}, input: {}", param.mycode),
+        )
+            .into_response();
     }
 
     let accountx = param.accountx.to_uppercase().trim().to_owned();
