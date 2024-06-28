@@ -51,8 +51,8 @@ fn create_rules() -> HashMap<&'static str, Duration> {
     #[cfg(not(debug_assertions))]
     {
         let mut rules = HashMap::new();
-        rules.insert("/GPscripts/club_export.php", Duration::from_secs(3));
-        rules.insert("/GPscripts/club_import.php", Duration::from_secs(2));
+        rules.insert("/GPscripts/club_export.php", Duration::from_secs(2));
+        rules.insert("/GPscripts/club_import.php", Duration::from_secs(1));
         rules.insert("/GPscripts/club_register.php", Duration::from_secs(60));
         rules.insert("/GPscripts/club_login.php", Duration::from_secs(10));
         rules.insert("/GPscripts/startup.php", Duration::from_secs(15));
