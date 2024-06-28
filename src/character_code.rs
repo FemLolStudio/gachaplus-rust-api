@@ -1,3 +1,5 @@
+use axum::error_handling::HandleErrorLayer;
+
 pub struct Color {
     red: u8,
     green: u8,
@@ -118,6 +120,12 @@ impl Color {
             hex = &hex[2..];
         }
 
+        let hex = if hex.ends_with("defined") {
+            "FFFFFF"
+        } else {
+            hex
+        };
+
         if hex.len() != 6 {
             return Err("Invalid hex length".to_string());
         }
@@ -143,6 +151,28 @@ mod tests {
         let color = Color::new_from_hex(hex);
         assert!(color.is_ok());
         assert_eq!(hex, color.unwrap().to_hex());
+    }
+    #[test]
+    fn undefined_color_test() {
+        let hex = "undefined";
+        let color = Color::new_from_hex(hex);
+        assert!(color.is_ok());
+        assert_eq!("FFFFFF", color.unwrap().to_hex());
+    }
+    #[test]
+    fn defined_color_test() {
+        let hex = "defined";
+        let color = Color::new_from_hex(hex);
+        assert!(color.is_ok());
+        assert_eq!("FFFFFF", color.unwrap().to_hex());
+    }
+    #[test]
+    #[should_panic]
+    fn defined_wrong_color_test() {
+        let hex = "definedooooo";
+        let color = Color::new_from_hex(hex);
+        assert!(color.is_ok());
+        assert_eq!("FFFFFF", color.unwrap().to_hex());
     }
     #[test]
     fn color_test_from_0xcolor() {
