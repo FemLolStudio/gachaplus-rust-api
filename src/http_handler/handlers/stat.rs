@@ -223,7 +223,7 @@ pub async fn get_info(
     for (pid, process) in processes {
         processes_table.push([
             format!("[{}]", pid),
-            process.name().to_owned(),
+            process.name().to_str().unwrap().to_owned(),
             format!("{} MB", (process.memory() / MB).separate_with_spaces()),
             format!(
                 "{} MB",

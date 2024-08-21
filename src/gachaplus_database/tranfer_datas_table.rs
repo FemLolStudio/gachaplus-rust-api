@@ -61,9 +61,9 @@ impl TransferDatas {
     }
 }
 
-impl From<String> for TransferDatas {
-    fn from(value: String) -> Self {
-        serde_json::from_str(&value).unwrap()
+impl From<Vec<u8>> for TransferDatas {
+    fn from(value: Vec<u8>) -> Self {
+        serde_json::from_slice(&value).unwrap()
     }
 }
 
