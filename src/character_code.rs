@@ -18,12 +18,13 @@ pub struct CharacterCode {
 
     numbers: Vec<i32>,
     colors: Vec<Color>,
+    numbers2: Vec<i32>,
 }
 
 impl CharacterCode {
     pub fn new_from_code(mycode: &str) -> Result<Self, String> {
         let size = mycode.split('|').count();
-        if size < 445 {
+        if size < 445 && size > 457 {
             return Err("Wrong size".to_owned());
         }
         let mut params: Vec<String> = mycode
@@ -36,19 +37,33 @@ impl CharacterCode {
                 param.push('-');
             }
         }
+        while params.len() < 447 {
+            params.push("FFFFFF".to_string())
+        }
+        while params.len() < 457 {
+            params.push(0.to_string())
+        }
 
         let mut numbers = Vec::new();
         let mut colors = Vec::new();
+        let mut numbers2 = Vec::new();
+
         for param in params[10..=278].iter() {
             match param.parse::<i32>() {
                 Ok(num) => numbers.push(num),
                 Err(err) => return Err(err.to_string()),
             };
         }
-        for param in params[279..].iter() {
+        for param in params[279..=446].iter() {
             match Color::new_from_hex(&param) {
                 Ok(color) => colors.push(color),
                 Err(err) => return Err(err),
+            };
+        }
+        for param in params[447..457].iter() {
+            match param.parse::<i32>() {
+                Ok(num) => numbers2.push(num),
+                Err(err) => return Err(err.to_string()),
             };
         }
 
@@ -66,6 +81,7 @@ impl CharacterCode {
 
             numbers,
             colors,
+            numbers2,
         };
 
         if character.name.len() > 24
@@ -86,7 +102,7 @@ impl CharacterCode {
     }
     pub fn to_code(&self) -> String {
         format!(
-            "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",
+            "{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}|{}",
             self.name,
             self.birthday,
             self.age,
@@ -106,7 +122,12 @@ impl CharacterCode {
                 .iter()
                 .map(|color| color.to_hex())
                 .collect::<Vec<String>>()
-                .join("|")
+                .join("|"),
+            self.numbers2
+                .iter()
+                .map(|num| num.to_string())
+                .collect::<Vec<String>>()
+                .join("|"),
         )
     }
 }
@@ -202,7 +223,7 @@ mod tests {
         let code = "Nameeeeeeeeeeeeeeeeeeeee|Bdayyyyyyyyy|ageee|profileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofil|Creatorrrrrrrrrrrrrrrrrr|Fav_colorrrrrrrrrrrrrrrr|Fav_fooooooooooooooooood|locationnnnnnnnnnnnnnnnn|personalityyyyyyyyyyyyyy|Occupationnnnnnnnnnnnnnn|263|40|72|5|2|2|38|0|1|1|1|1|17|5|0|1|0|9|9|1|1|1|1|53|0|0|0|0|4|0|0|0|0|9|12|2|2|25|25|17|17|12|12|0|0|0|0|0|0|0|0|0|0|0|0|0|0|184|0|1|1|0|1|1|1|0|1|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|2|0|0|0|0|0|0|0|FFE2D4|8A624F|E0F4FF|414D69|8EFBFF|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|4C97D9|FFFFFF|8ACEFF|020202|020202|8ACEFF|020202|020202|3A82FF|020202|3A82FF|020202|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|252C3C|020202|4C97D9|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|8ACEFF|020202|FFFFFF|5478E0|020202|8ACEFF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|5478E0|020202|8ACEFF|5478E0|020202|8ACEFF|FFFFFF|020202|FFFFFF|FFFFFF|020202|FFFFFF|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|191919|020202|5478E0|191919|020202|5478E0|FFFFFF|020202|8ACEFF|FFFFFF|020202|8ACEFF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|F7D095|020202|664430|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(code));
     }
 
     #[test]
@@ -211,7 +232,7 @@ mod tests {
         let code = "Nameeeeeeeeeeeeeeeeeeeee|Bdayyyyyyyyy|ageee00|profileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofil|Creatorrrrrrrrrrrrrrrrrr|Fav_colorrrrrrrrrrrrrrrr|Fav_fooooooooooooooooood|locationnnnnnnnnnnnnnnnn|personalityyyyyyyyyyyyyy|Occupationnnnnnnnnnnnnnn|263|40|72|5|2|2|38|0|1|1|1|1|17|5|0|1|0|9|9|1|1|1|1|53|0|0|0|0|4|0|0|0|0|9|12|2|2|25|25|17|17|12|12|0|0|0|0|0|0|0|0|0|0|0|0|0|0|184|0|1|1|0|1|1|1|0|1|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|2|0|0|0|0|0|0|0|FFE2D4|8A624F|E0F4FF|414D69|8EFBFF|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|4C97D9|FFFFFF|8ACEFF|020202|020202|8ACEFF|020202|020202|3A82FF|020202|3A82FF|020202|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|252C3C|020202|4C97D9|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|8ACEFF|020202|FFFFFF|5478E0|020202|8ACEFF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|5478E0|020202|8ACEFF|5478E0|020202|8ACEFF|FFFFFF|020202|FFFFFF|FFFFFF|020202|FFFFFF|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|191919|020202|5478E0|191919|020202|5478E0|FFFFFF|020202|8ACEFF|FFFFFF|020202|8ACEFF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|F7D095|020202|664430|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(code));
     }
     #[test]
     #[should_panic]
@@ -219,7 +240,7 @@ mod tests {
         let code = "Nameeeeeeeeeeeeeeeeeeeee|Bdayyyyyyyyy|ageee|profileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofil|Creatorrrrrrrrrrrrrrrrrr|Fav_colorrrrrrrrrrrrrrrr|Fav_fooooooooooooooooood|locationnnnnnnnnnnnnnnnn|personalityyyyyyyyyyyyyy|Occupationnnnnnnnnnnnnnn|263p|40|72|5|2|2|38|0|1|1|1|1|17|5|0|1|0|9|9|1|1|1|1|53|0|0|0|0|4|0|0|0|0|9|12|2|2|25|25|17|17|12|12|0|0|0|0|0|0|0|0|0|0|0|0|0|0|184|0|1|1|0|1|1|1|0|1|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|2|0|0|0|0|0|0|0|FFE2D4|8A624F|E0F4FF|414D69|8EFBFF|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|4C97D9|FFFFFF|8ACEFF|020202|020202|8ACEFF|020202|020202|3A82FF|020202|3A82FF|020202|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|252C3C|020202|4C97D9|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|8ACEFF|020202|FFFFFF|5478E0|020202|8ACEFF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|5478E0|020202|8ACEFF|5478E0|020202|8ACEFF|FFFFFF|020202|FFFFFF|FFFFFF|020202|FFFFFF|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|191919|020202|5478E0|191919|020202|5478E0|FFFFFF|020202|8ACEFF|FFFFFF|020202|8ACEFF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|F7D095|020202|664430|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(code));
     }
     #[test]
     #[should_panic]
@@ -227,7 +248,7 @@ mod tests {
         let code = "Nameeeeeeeeeeeeeeeeeeeee|Bdayyyyyyyyy|ageee|profileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofil|Creatorrrrrrrrrrrrrrrrrr|Fav_colorrrrrrrrrrrrrrrr|Fav_fooooooooooooooooood|locationnnnnnnnnnnnnnnnn|personalityyyyyyyyyyyyyy|Occupationnnnnnnnnnnnnnn|263|40|72|5|2|2|38|0|1|1|1|1|17|5|0|1|0|9|9|1|1|1|1|53|0|0|0|0|4|0|0|0|0|9|12|2|2|25|25|17|17|12|12|0|0|0|0|0|0|0|0|0|0|0|0|0|0|184|0|1|1|0|1|1|1|0|1|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|2|0|0|0|0|0|0|0|FFE2D4|8A624F|E0F4FF|414D69|8EFBFF|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|4C97D9|FFFFFF|8ACEFF|020202|020202|8ACEFF|020202|020202|3A82FF|020202|3A82FF|020202|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|252C3C|020202|4C97D9|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|8ACEFF|020202|FFFFFF|5478E0|020202|8ACEFF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|5478E0|020202|8ACEFF|5478E0|020202|8ACEFF|FFFFFF|020202|FFFFFF|FFFFFF|020202|FFFFFF|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|191919|020202|5478E0|191919|020202|5478E0|FFFFFF|020202|8ACEFF|FFFFFF|020202|8ACEFF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|F7D095|020202|664430|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|020202|020202|020202|FFFFFF|020202|FFFFFF|0202T2|020202|020202|020202|020202|020202";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(code));
     }
     #[test]
     fn character_test_empty() {
@@ -235,13 +256,20 @@ mod tests {
         let target_code = "Nameeeeeeeeeeeeeeeeeeeee|Bdayyyyyyyyy|-|profileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofileprofil|Creatorrrrrrrrrrrrrrrrrr|Fav_colorrrrrrrrrrrrrrrr|Fav_fooooooooooooooooood|locationnnnnnnnnnnnnnnnn|personalityyyyyyyyyyyyyy|Occupationnnnnnnnnnnnnnn|263|40|72|5|2|2|38|0|1|1|1|1|17|5|0|1|0|9|9|1|1|1|1|53|0|0|0|0|4|0|0|0|0|9|12|2|2|25|25|17|17|12|12|0|0|0|0|0|0|0|0|0|0|0|0|0|0|184|0|1|1|0|1|1|1|0|1|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|2|0|0|0|0|0|0|0|FFE2D4|8A624F|E0F4FF|414D69|8EFBFF|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|E0F4FF|414D69|8EFBFF|8A6E5E|414D69|694F43|4C97D9|FFFFFF|8ACEFF|020202|020202|8ACEFF|020202|020202|3A82FF|020202|3A82FF|020202|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|252C3C|020202|4C97D9|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|8ACEFF|020202|FFFFFF|5478E0|020202|8ACEFF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|5478E0|020202|8ACEFF|5478E0|020202|8ACEFF|FFFFFF|020202|FFFFFF|FFFFFF|020202|FFFFFF|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|191919|020202|5478E0|191919|020202|5478E0|FFFFFF|020202|8ACEFF|FFFFFF|020202|8ACEFF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|F7D095|020202|664430|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(target_code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(target_code));
     }
     #[test]
     fn extra_2_color() {
         let code = "Default Boy|2/22|20|Hey! I'm the default boy of Gacha Club.|Lunime|Blue|Rice|USA|Funny|Student|2|1|1|4|1|1|1|0|1|1|1|1|0|1|0|0|0|1|1|1|1|1|1|1|0|0|0|0|0|0|0|0|0|2|0|1|1|1|1|3|3|1|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|1|0|1|1|1|0|0|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|1|6|26|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|0|0|0|0|0|0|0|0|FFE2D4|8A624F|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|B15482|FFC2C2|855944|020202|27170F|855944|020202|27170F|A17261|3A1F17|A17261|3A1F17|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|FFFFFF|020202|8AAEFF|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|FFFFFF|020202|8589FF|191919|020202|4638FF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|FFFFFF|020202|8589FF|FFFFFF|020202|8589FF|3D3E62|020202|3D3E62|3D3E62|020202|3D3E62|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|8AAEFF|020202|DEECFF|8AAEFF|020202|DEECFF|FFFFFF|020202|3A82FF|FFFFFF|020202|3A82FF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|FF3F3F|020202|FFFFFF|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|BF0000|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202|FFFFFF|FFFFFF";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
-        assert_eq!(code, character.unwrap().to_code());
+        assert!(character.unwrap().to_code().contains(code));
+    }
+    #[test]
+    fn extra_10_num() {
+        let code = "Default Boy|2/22|20|Hey! I'm the default boy of Gacha Club.|Lunime|Blue|Rice|USA|Funny|Student|2|1|1|4|1|1|1|0|1|1|1|1|0|1|0|0|0|1|1|1|1|1|1|1|0|0|0|0|0|0|0|0|0|2|0|1|1|1|1|3|3|1|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|1|1|0|1|1|1|0|0|1|1|1|1|1|1|2|1|1|1|1|1|1|0|0|1|6|26|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|0|0|0|0|0|0|0|0|FFE2D4|8A624F|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|B15482|FFC2C2|855944|020202|27170F|855944|020202|27170F|A17261|3A1F17|A17261|3A1F17|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|FFFFFF|020202|8AAEFF|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|FFFFFF|020202|8589FF|191919|020202|4638FF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|FFFFFF|020202|8589FF|FFFFFF|020202|8589FF|3D3E62|020202|3D3E62|3D3E62|020202|3D3E62|191919|020202|B4BFCD|191919|020202|B8B8B8|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|8AAEFF|020202|DEECFF|8AAEFF|020202|DEECFF|FFFFFF|020202|3A82FF|FFFFFF|020202|3A82FF|4638FF|020202|BCBBFF|8589FF|020202|FFFFFF|A487FF|020202|8AAEFF|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|FF3F3F|020202|FFFFFF|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|AAA7CB|020202|B4BFCD|AAA7CB|020202|B4BFCD|BF0000|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202|FFFFFF|FFFFFF|0|0|0|0|1|7|4|-1|10|4";
+        let character = CharacterCode::new_from_code(code);
+        assert!(character.is_ok());
+        assert!(character.unwrap().to_code().contains(code));
     }
 }
