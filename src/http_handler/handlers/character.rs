@@ -8,7 +8,10 @@ use axum::{
 };
 use serde::Deserialize;
 
-use crate::http_handler::{response_manager::ResponseManager, AppState};
+use crate::{
+    character_code,
+    http_handler::{response_manager::ResponseManager, AppState},
+};
 use crate::{character_code::CharacterCode, gachaplus_database::oc_table::Oc};
 
 #[derive(Deserialize)]
@@ -52,9 +55,16 @@ pub async fn get_oc(
     let oc_result = app_state.database.oc_table.get_oc(&accountx).await;
 
     match oc_result {
-        Ok(oc) => ResponseManager::new_ok()
-            .add("xmycode", &oc.mycode)
-            .into_response(),
+        Ok(oc) => match CharacterCode::new_from_code(&oc.mycode) {
+            Ok(character) => ResponseManager::new_ok()
+                .add("xmycode", &character.to_code())
+                .into_response(),
+            Err(err) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Invalid `mycode`: {err}, code: {}", oc.mycode),
+            )
+                .into_response(),
+        },
         Err(_) => (StatusCode::BAD_REQUEST, "No result").into_response(),
     }
 }
