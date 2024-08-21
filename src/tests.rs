@@ -4,7 +4,7 @@ mod tests {
         header::{HeaderMap, HeaderValue},
         Client,
     };
-    use std::{net::IpAddr, str::FromStr, time::Duration};
+    use std::time::Duration;
     use tokio::time::sleep;
 
     const URL: &str = "http://localhost:8080";
@@ -12,7 +12,7 @@ mod tests {
     fn get_client() -> Client {
         Client::builder()
             .connection_verbose(true)
-            .local_address(IpAddr::from_str("0.0.0.0").unwrap())
+            //.local_address(IpAddr::from_str("0.0.0.0").unwrap())
             .build()
             .unwrap()
     }
@@ -32,7 +32,7 @@ mod tests {
     #[tokio::test]
     async fn test_random_character() {
         tokio::spawn(crate::run_server());
-        sleep(Duration::from_secs(3)).await;
+        sleep(Duration::from_secs(5)).await;
 
         let result = get_client()
             .post(URL.to_string() + "/GPscripts/randomcode.php")
