@@ -95,10 +95,10 @@ pub async fn create_router(app_state: Arc<AppState>) -> Router {
             app_state.clone(),
             logdb::log_db,
         ))
-        .layer(middleware::from_fn_with_state(
-            app_state.clone(),
-            ratelimit::rate_limit_middleware,
-        ))
+        // .layer(middleware::from_fn_with_state(
+        //     app_state.clone(),
+        //     ratelimit::rate_limit_middleware,
+        // ))
         .layer(middleware::from_fn_with_state(
             app_state.clone(),
             fake_request::fake_request_middleware,
