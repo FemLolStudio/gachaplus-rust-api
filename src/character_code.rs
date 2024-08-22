@@ -44,9 +44,7 @@ impl CharacterCode {
                 param.push('-');
             }
         }
-        while params.len() < 447 {
-            params.push("FFFFFF".to_string())
-        }
+
         while params.len() < 477 {
             params.push(def_params[params.len()].to_owned());
         }
