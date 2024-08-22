@@ -40,7 +40,7 @@ impl CharacterCode {
         while params.len() < 447 {
             params.push("FFFFFF".to_string())
         }
-        while params.len() < 457 {
+        while params.len() < 477 {
             params.push(0.to_string())
         }
 
