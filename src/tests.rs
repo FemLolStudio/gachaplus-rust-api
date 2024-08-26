@@ -32,7 +32,8 @@ mod tests {
     #[tokio::test]
     async fn test_random_character() {
         tokio::spawn(crate::run_server());
-        sleep(Duration::from_secs(5)).await;
+
+        sleep(Duration::from_secs(10)).await;
 
         let result = get_client()
             .post(URL.to_string() + "/GPscripts/randomcode.php")
