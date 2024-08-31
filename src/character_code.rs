@@ -22,6 +22,7 @@ pub struct CharacterCode {
 }
 
 static DEFCHAR: &str = "placeholder|||Coming soon!|||||||263|40|40|4|17|1|1|0|1|0|1|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|127|0|0|0|22|22|0|0|1|1|1|2|0|0|0|0|0|1|6|0|0|0|0|0|0|0|1|1|0|1|1|2|0|0|22|11|1|1|1|23|25|1|1|1|1|1|1|21|21|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|5|497|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|0|0|0|0|0|0|0|0|FFFFFF|6C71A4|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|B15482|FFC2C2|855944|020202|27170F|855944|020202|27170F|A17261|3A1F17|A17261|3A1F17|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|EDBDFF|4F03AA|FFFFFF|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|EDBDFF|4F03AA|E0FFFE|191919|020202|4638FF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|EDBDFF|4F03AA|E0FFFE|EDBDFF|4F03AA|E0FFFE|FFFFFF|B2AEDB|FFFFFF|FFFFFF|B2AEDB|FFFFFF|E0F4FF|6605D9|EDBDFF|EDBDFF|4F03AA|E0FFFE|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|4F03AA|4F03AA|EDBDFF|4F03AA|4F03AA|EDBDFF|E0FFFE|6605D9|FFFFFF|E0FFFE|6605D9|FFFFFF|4638FF|020202|BCBBFF|B2AEDB|B2AEDB|DEECFF|E0FFFE|6605D9|E0FFFE|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|FF3F3F|020202|FFFFFF|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|FFFFFF|B2AEDB|E0E1FF|FFFFFF|B2AEDB|E0E1FF|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202|FFFFFF|FFFFFF|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|1";
+static MAXLENGTH: usize = 478 + 29;
 
 impl CharacterCode {
     pub fn new_from_code(mycode: &str) -> Result<Self, String> {
@@ -36,7 +37,7 @@ impl CharacterCode {
             .map(|s| s.trim().to_string())
             .collect();
 
-        if params.len() < 445 || params.len() > 478 {
+        if params.len() < 445 || params.len() > MAXLENGTH {
             return Err("Wrong size".to_owned());
         }
         for param in params.iter_mut() {
@@ -45,7 +46,7 @@ impl CharacterCode {
             }
         }
 
-        while params.len() < 478 {
+        while params.len() < MAXLENGTH {
             params.push(def_params[params.len()].to_owned());
         }
 
@@ -65,7 +66,7 @@ impl CharacterCode {
                 Err(err) => return Err(err),
             };
         }
-        for param in params[447..478].iter() {
+        for param in params[447..MAXLENGTH].iter() {
             match param.parse::<i32>() {
                 Ok(num) => numbers2.push(num),
                 Err(err) => return Err(err.to_string()),

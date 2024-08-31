@@ -1,4 +1,4 @@
-use std::sync::Arc;
+use std::sync::{Arc, LazyLock};
 
 use axum::{
     extract::State,
@@ -19,6 +19,21 @@ pub struct GetTransferInput {
     pub systemCall: String,
     pub accountx: u32,
 }
+
+static EXTRA_NAMES: LazyLock<String> = LazyLock::new(|| {
+    let mut extra_names = Vec::new();
+    for i in 0..450 {
+        extra_names.push(format!("extraname{i}"));
+    }
+    extra_names.join("|")
+});
+static EXTRA_SLOTS: LazyLock<String> = LazyLock::new(|| {
+    let mut extra_names = Vec::new();
+    for i in 0..450 {
+        extra_names.push(format!("extraslot{i}"));
+    }
+    extra_names.join("|")
+});
 
 #[axum::debug_handler]
 pub async fn get_transfer_datas(
@@ -81,6 +96,18 @@ pub async fn get_transfer_datas(
             .add("datastring18", &row.data.datastring18)
             .add("datastring19", &row.data.datastring19)
             .add("datastring20", &row.data.datastring20)
+            .add(
+                "dataextranamestring",
+                &row.data
+                    .dataextranamestring
+                    .unwrap_or(EXTRA_NAMES.to_string()),
+            )
+            .add(
+                "dataextraslotstring",
+                &row.data
+                    .dataextraslotstring
+                    .unwrap_or(EXTRA_SLOTS.to_string()),
+            )
             .into_response()
     } else {
         (
