@@ -60,7 +60,16 @@ impl CharacterCode {
         for param in params[10..=278].iter() {
             match param.parse::<i32>() {
                 Ok(num) => numbers.push(num),
-                Err(err) => return Err(err.to_string()),
+                Err(err) => {
+                    let index = params
+                        .iter()
+                        .position(|x| x == param)
+                        .map(|x| x as i32)
+                        .unwrap_or(-1);
+                    return Err(format!(
+                        "Can't paste string to int! Index: {index} String: '{param}', Error: {err}"
+                    ));
+                }
             };
         }
         for param in params[279..=446].iter() {
@@ -72,7 +81,16 @@ impl CharacterCode {
         for param in params[447..MAXLENGTH].iter() {
             match param.parse::<i32>() {
                 Ok(num) => numbers2.push(num),
-                Err(err) => return Err(err.to_string()),
+                Err(err) => {
+                    let index = params
+                        .iter()
+                        .position(|x| x == param)
+                        .map(|x| x as i32)
+                        .unwrap_or(-1);
+                    return Err(format!(
+                        "Can't paste string to color! Index: {index} String: '{param}' Error: {err}",
+                    ));
+                }
             };
         }
 
@@ -104,7 +122,7 @@ impl CharacterCode {
             || character.personality.len() > 24
             || character.occupation.len() > 24
         {
-            Err("Wrong param length".to_owned())
+            Err("Wrong param length on the character profile!".to_string())
         } else {
             Ok(character)
         }
@@ -283,7 +301,7 @@ mod tests {
     }
     #[test]
     fn new_character_test() {
-        let code = "placeholder|-|-|Coming soon!|-|-|-|-|-|-|263|40|40|4|17|1|1|0|1|0|1|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|127|0|0|0|22|22|0|0|1|1|1|2|0|0|0|0|0|1|6|0|0|0|0|0|0|0|1|1|0|1|1|2|0|0|22|11|1|1|1|23|25|1|1|1|1|1|1|21|21|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|5|497|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|0|0|0|0|0|0|0|0|FFFFFF|6C71A4|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|B15482|FFC2C2|855944|020202|27170F|855944|020202|27170F|A17261|3A1F17|A17261|3A1F17|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|EDBDFF|4F03AA|FFFFFF|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|EDBDFF|4F03AA|E0FFFE|191919|020202|4638FF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|EDBDFF|4F03AA|E0FFFE|EDBDFF|4F03AA|E0FFFE|FFFFFF|B2AEDB|FFFFFF|FFFFFF|B2AEDB|FFFFFF|E0F4FF|6605D9|EDBDFF|EDBDFF|4F03AA|E0FFFE|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|4F03AA|4F03AA|EDBDFF|4F03AA|4F03AA|EDBDFF|E0FFFE|6605D9|FFFFFF|E0FFFE|6605D9|FFFFFF|4638FF|020202|BCBBFF|B2AEDB|B2AEDB|DEECFF|E0FFFE|6605D9|E0FFFE|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|FF3F3F|020202|FFFFFF|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|FFFFFF|B2AEDB|E0E1FF|FFFFFF|B2AEDB|E0E1FF|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202|FFFFFF|FFFFFF|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|4|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0";
+        let code = "placeholder|-|-|Coming soon!|-|-|-|-|-|-|263|40|40|4|17|1|1|0|1|0|1|1|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|0|127|0|0|0|22|22|0|0|1|1|1|2|0|0|0|0|0|1|6|0|0|0|0|0|0|0|1|1|0|1|1|2|0|0|22|11|1|1|1|23|25|1|1|1|1|1|1|21|21|0|6|0|0|1|0|1|1|1|1|0|0|0|0|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|0|0|1|1|0|1|1|0|1|1|0|0|0|1|1|0|1|1|1|1|1|1|0|0|1|1|1|1|0|1|1|0|0|1|1|0|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|1|5|497|0|0|1|1|0|1|0|0|0|1|1|0|0|1|1|0|0|0|0|0|0|0|0|0|0|1|1|1|0|0|0|0|0|0|0|0|0|0|FFFFFF|6C71A4|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|8A6E5E|3A1F17|694F43|B15482|FFC2C2|855944|020202|27170F|855944|020202|27170F|A17261|3A1F17|A17261|3A1F17|8A624F|020202|8A624F|020202|191919|020202|ECECEC|4638FF|020202|BBD4FF|8589FF|020202|FF93BC|7F7EA6|020202|8AAEFF|FF8383|8589FF|FFC2C2|020202|FF8383|020202|FFFFFF|EDBDFF|4F03AA|FFFFFF|DEECFF|020202|3A82FF|EBE0FF|020202|8AAEFF|0256C9|020202|8AAEFF|E0E1FF|020202|8ACEFF|EDBDFF|4F03AA|E0FFFE|191919|020202|4638FF|AAA7CB|020202|EEE9FF|AAA7CB|020202|EEE9FF|EDBDFF|4F03AA|E0FFFE|EDBDFF|4F03AA|E0FFFE|FFFFFF|B2AEDB|FFFFFF|FFFFFF|B2AEDB|FFFFFF|E0F4FF|6605D9|EDBDFF|EDBDFF|4F03AA|E0FFFE|FFFFFF|020202|AAA7CB|FFFFFF|020202|AAA7CB|4F03AA|4F03AA|EDBDFF|4F03AA|4F03AA|EDBDFF|E0FFFE|6605D9|FFFFFF|E0FFFE|6605D9|FFFFFF|4638FF|020202|BCBBFF|B2AEDB|B2AEDB|DEECFF|E0FFFE|6605D9|E0FFFE|FFFFFF|020202|A487FF|FFFFFF|020202|A487FF|FF3F3F|020202|FFC2C2|FF3F3F|020202|FFFFFF|FF3F3F|020202|FFFFFF|FF3F3F|020202|191919|8589FF|020202|FFFFFF|8589FF|020202|FFFFFF|FFFFFF|B2AEDB|E0E1FF|FFFFFF|B2AEDB|E0E1FF|020202|020202|020202|FFFFFF|020202|FFFFFF|020202|020202|020202|020202|020202|020202|FFFFFF|FFFFFF|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|100|-100|1|1|360|4|0|0|0|0|0|0|77|0|0|0|0|0|0|0|0|0|100|0|0|0|0|0|0|0|0|0|0|0|-1";
         let character = CharacterCode::new_from_code(code);
         assert!(character.is_ok());
         assert_eq!(character.unwrap().to_code(), code);
