@@ -46,8 +46,11 @@ impl CharacterCode {
             }
         }
 
-        while params.len() < MAXLENGTH {
+        while params.len() < 478 {
             params.push(def_params[params.len()].to_owned());
+        }
+        while params.len() < MAXLENGTH {
+            params.push(0.to_string());
         }
 
         let mut numbers = Vec::new();
