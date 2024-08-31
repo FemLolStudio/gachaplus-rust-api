@@ -92,7 +92,8 @@ impl CharacterCode {
             };
         }
         for param in params[447..MAXLENGTH].iter() {
-            match param.parse::<i32>() {
+            let param2 = if param == UNDEFINED { "0" } else { param };
+            match param2.parse::<i32>() {
                 Ok(num) => numbers2.push(num),
                 Err(err) => {
                     let index = params
