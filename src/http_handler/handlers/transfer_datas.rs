@@ -97,16 +97,12 @@ pub async fn get_transfer_datas(
             .add("datastring19", &row.data.datastring19)
             .add("datastring20", &row.data.datastring20)
             .add(
-                "dataextranamestring",
-                &row.data
-                    .dataextranamestring
-                    .unwrap_or(EXTRA_NAMES.to_string()),
+                "extranamestring",
+                &row.data.extranamestring.unwrap_or(EXTRA_NAMES.to_string()),
             )
             .add(
-                "dataextraslotstring",
-                &row.data
-                    .dataextraslotstring
-                    .unwrap_or(EXTRA_SLOTS.to_string()),
+                "extraslotstring",
+                &row.data.extraslotstring.unwrap_or(EXTRA_SLOTS.to_string()),
             )
             .into_response()
     } else {
