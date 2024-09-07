@@ -29,8 +29,10 @@ pub struct TransferDatas {
     pub datastring18: String,
     pub datastring19: String,
     pub datastring20: String,
-    pub extranamestring: Option<String>,
-    pub extraslotstring: Option<String>,
+    #[serde(alias = "extranamestring")]
+    pub datastring21: Option<String>,
+    #[serde(alias = "extraslotstring")]
+    pub datastring22: Option<String>,
 }
 impl TransferDatas {
     pub fn is_invalid(&self) -> Option<String> {
