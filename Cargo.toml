@@ -21,7 +21,7 @@ sqlx = {version = "0.8", features = ["mysql", "chrono", "json", "runtime-tokio"]
 # -- Async
 tokio = { version = "1.34", features = ["macros", "rt-multi-thread"] }
 # -- System info
-sysinfo = "0.31"
+sysinfo = "0.32"
 memory-stats = "1.1"
 # -- Visualize
 chrono = {version = "0.4", features = ["serde"] }
