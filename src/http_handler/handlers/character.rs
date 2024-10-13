@@ -8,10 +8,7 @@ use axum::{
 };
 use serde::Deserialize;
 
-use crate::{
-    character_code,
-    http_handler::{response_manager::ResponseManager, AppState},
-};
+use crate::http_handler::{response_manager::ResponseManager, AppState};
 use crate::{character_code::CharacterCode, gachaplus_database::oc_table::Oc};
 
 #[derive(Deserialize)]

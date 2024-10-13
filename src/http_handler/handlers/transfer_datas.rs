@@ -28,11 +28,11 @@ static EXTRA_NAMES: LazyLock<String> = LazyLock::new(|| {
     extra_names.join("|")
 });
 static EXTRA_SLOTS: LazyLock<String> = LazyLock::new(|| {
-    let mut extra_names = Vec::new();
+    let mut extra_slots = Vec::new();
     for i in 0..450 {
-        extra_names.push(format!("extraslot{i}"));
+        extra_slots.push(format!("extraslot{i}"));
     }
-    extra_names.join("|")
+    extra_slots.join("¦")
 });
 
 #[axum::debug_handler]
@@ -103,6 +103,14 @@ pub async fn get_transfer_datas(
             .add(
                 "datastring22",
                 &row.data.datastring22.unwrap_or(EXTRA_SLOTS.to_string()),
+            )
+            .add(
+                "datastring23",
+                &row.data.datastring23.unwrap_or(String::new()),
+            )
+            .add(
+                "datastring24",
+                &row.data.datastring24.unwrap_or(String::new()),
             )
             .into_response()
     } else {
